@@ -1,0 +1,239 @@
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+DROP TABLE IF EXISTS `sc_api`;
+
+CREATE TABLE `sc_api` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `key` varchar(255) NOT NULL,
+  `secret` varchar(255) NOT NULL,
+  `created` bigint(20) NOT NULL,
+  `expired` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `key` (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `sc_api` WRITE;
+/*!40000 ALTER TABLE `sc_api` DISABLE KEYS */;
+
+INSERT INTO `sc_api` (`id`, `name`, `key`, `secret`, `created`, `expired`)
+VALUES
+	(1,'admin','e6c4658ad5564183aa65f43f4a941cce','/RDJHBCHREofNrofj-Xwymcr~DDkgv56',1503334835,0);
+
+/*!40000 ALTER TABLE `sc_api` ENABLE KEYS */;
+UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `sc_block_user`;
+
+CREATE TABLE `sc_block_user` (
+  `user_id` varchar(255) NOT NULL,
+  `block_user_id` varchar(255) NOT NULL,
+  `created` bigint(20) NOT NULL,
+  UNIQUE KEY `user_id` (`user_id`,`block_user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sc_device`;
+
+CREATE TABLE `sc_device` (
+  `user_id` varchar(255) NOT NULL,
+  `platform` int(11) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `notification_device_id` varchar(255) DEFAULT NULL,
+  UNIQUE KEY `token` (`token`),
+  UNIQUE KEY `user_id` (`user_id`,`platform`),
+  UNIQUE KEY `notification_device_id` (`notification_device_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sc_message`;
+
+CREATE TABLE `sc_message` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `message_id` varchar(255) NOT NULL,
+  `room_id` varchar(255) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `payload` mediumblob,
+  `created` bigint(20) NOT NULL,
+  `modified` bigint(20) NOT NULL,
+  `deleted` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `message_id` (`message_id`),
+  KEY `room_id_deleted_created` (`room_id`,`deleted`,`created`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `sc_message` WRITE;
+/*!40000 ALTER TABLE `sc_message` DISABLE KEYS */;
+
+INSERT INTO `sc_message` (`id`, `message_id`, `room_id`, `user_id`, `type`, `payload`, `created`, `modified`, `deleted`)
+VALUES
+	(1,'300b4a42-abc5-4cc5-bd41-3ef2c491dcbc','9d60544c-4409-4269-83c7-28144cac30c6','00581ea9-3547-4c81-930c-a3ed042e4b21','text',X'7B2274657874223A224869227D',1498755974,1498755974,0),
+	(2,'bd3c0ebf-070a-45f5-b884-b22124669803','9d60544c-4409-4269-83c7-28144cac30c6','d18b8a24-7bd5-4580-b54c-26a60d0e097e','text',X'7B2274657874223A22486F77277320697420676F696E67227D',1498755994,1498755994,0),
+	(3,'2b0b5240-cde0-4729-ab17-c671d48cc85e','8cac03d1-f10f-43b0-bf99-b3d221783161','00581ea9-3547-4c81-930c-a3ed042e4b21','text',X'7B2274657874223A225768656E20646F2077652073746172742064657369676E20616E642077686F2077696C6C20646F2069743F227D',1498756985,1498756985,0),
+	(4,'0ec72b7f-4d89-4957-b14b-a31cf60385e2','947d12f8-21fe-4108-8b73-a1153a781549','00581ea9-3547-4c81-930c-a3ed042e4b21','text',X'7B2274657874223A2249276D2068656164696E6720686F6D65206E6F772E227D',1498822191,1498822191,0),
+	(5,'41816a35-10d5-4d13-a3c4-72791b551780','82d9c13c-4b4b-478b-b7f8-7473709f4a81','00581ea9-3547-4c81-930c-a3ed042e4b21','text',X'7B2274657874223A224865792C20492068617665206120646179206F666620746F6D6F72726F772E227D',1498822237,1498822237,0),
+	(6,'0bb8aac2-ef0b-4c8a-b423-d30a3fde3ffe','b14a1276-46c5-4fc5-8b18-fce1d4b6733a','00581ea9-3547-4c81-930c-a3ed042e4b21','text',X'7B2274657874223A22476F20666F7220697421227D',1498822274,1498822274,0),
+	(7,'60aba03b-3437-476e-b6ff-61755919b224','09172b11-44e1-455c-81fb-4b2cffa28492','00581ea9-3547-4c81-930c-a3ed042e4b21','text',X'7B2274657874223A224920676F74206120626F6E757320617420776F726B20746F64617921227D',1498822401,1498822401,0),
+	(8,'c10ac057-3d73-4c19-856c-e0649e4ffd11','a5fc268d-01e4-4c63-9b88-7db2c40cf6ad','00581ea9-3547-4c81-930c-a3ed042e4b21','text',X'7B2274657874223A22436F6D65206F6E2C206974277320616C6C20696E20796F757220686561642E204974277320706572666563746C792066696E652E227D',1498822573,1498822573,0),
+	(9,'61952241-48c8-4cdd-9fe2-ab61b8bf9c55','821d92d7-4a68-452a-b660-51379544cec4','00581ea9-3547-4c81-930c-a3ed042e4b21','text',X'7B2274657874223A22486F7727766520796F75206265656E20726563656E746C793F227D',1498822771,1498822771,0),
+	(10,'9d79f275-a80c-41ae-aa26-0631d94486b4','821d92d7-4a68-452a-b660-51379544cec4','7da9e9c6-d174-4ab5-86f8-99e727c710ff','text',X'7B2274657874223A2249277665206265656E20676F6F642E20416E6420796F753F227D',1498822929,1498822929,0),
+	(11,'d26c3d0e-7568-49be-ada7-e9e2ef023cda','821d92d7-4a68-452a-b660-51379544cec4','00581ea9-3547-4c81-930c-a3ed042e4b21','text',X'7B2274657874223A2249277665206265656E20776F726B696E6720616C6C206461792E227D',1498823175,1498823175,0),
+	(12,'7ecc5c82-8861-4161-9d18-98dc4f160976','821d92d7-4a68-452a-b660-51379544cec4','7da9e9c6-d174-4ab5-86f8-99e727c710ff','text',X'7B2274657874223A22446F6E2774207075736820796F757273656C6620746F6F20686172642E20596F752073686F756C642067657420736F6D6520726573742E227D',1498823204,1498823204,0),
+	(13,'2b7e6d4a-2256-42f9-9fe3-aaab68a33854','821d92d7-4a68-452a-b660-51379544cec4','7da9e9c6-d174-4ab5-86f8-99e727c710ff','image',X'7B226D696D65223A22696D6167652F6A706567222C22736F7572636555726C223A22687474703A2F2F6C6F63616C686F73743A393030302F76302F6173736574732F30353836383539612D373031302D343333642D626339382D3863353634333566333430332E6A7067227D',1498823236,1498823236,1),
+	(14,'00dfce2d-2635-4adf-b999-3e0f0bddabb6','821d92d7-4a68-452a-b660-51379544cec4','7da9e9c6-d174-4ab5-86f8-99e727c710ff','text',X'7B2274657874223A22427920746865207761792C20726563656E746C7920492073746172746564206B656570696E6720646F67732E227D',1498824356,1498824356,0),
+	(15,'21af4ffd-71c7-4c3d-bf06-511f6da00100','821d92d7-4a68-452a-b660-51379544cec4','7da9e9c6-d174-4ab5-86f8-99e727c710ff','image',X'7B226D696D65223A22696D6167652F706E67222C22736F7572636555726C223A22687474703A2F2F6C6F63616C686F73743A393030302F76302F6173736574732F31616435356265372D623136622D343766312D613530662D3961633439306632393964332E706E67227D',1498824363,1498824363,0),
+	(16,'fd10d8f2-1924-4398-bac0-d941b4c6f512','821d92d7-4a68-452a-b660-51379544cec4','00581ea9-3547-4c81-930c-a3ed042e4b21','text',X'7B2274657874223A22546861742773206E6963652E227D',1502785166,1502785166,0);
+
+/*!40000 ALTER TABLE `sc_message` ENABLE KEYS */;
+UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `sc_room`;
+
+CREATE TABLE `sc_room` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `room_id` varchar(255) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `picture_url` varchar(255) DEFAULT NULL,
+  `information_url` varchar(255) DEFAULT NULL,
+  `meta_data` mediumblob,
+  `available_message_types` varchar(255) DEFAULT NULL,
+  `type` int(11) NOT NULL,
+  `last_message` varchar(255) DEFAULT NULL,
+  `last_message_updated` bigint(20) NOT NULL,
+  `notification_topic_id` varchar(255) DEFAULT NULL,
+  `is_can_left` tinyint(1) NOT NULL,
+  `is_show_users` tinyint(1) NOT NULL,
+  `created` bigint(20) NOT NULL,
+  `modified` bigint(20) NOT NULL,
+  `deleted` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `room_id` (`room_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `sc_room` WRITE;
+/*!40000 ALTER TABLE `sc_room` DISABLE KEYS */;
+
+INSERT INTO `sc_room` (`id`, `room_id`, `user_id`, `name`, `picture_url`, `information_url`, `meta_data`, `available_message_types`, `type`, `last_message`, `last_message_updated`, `notification_topic_id`, `is_can_left`, `is_show_users`, `created`, `modified`, `deleted`)
+VALUES
+	(1,'9d60544c-4409-4269-83c7-28144cac30c6','00581ea9-3547-4c81-930c-a3ed042e4b21','','','',X'7B7D','',1,'How\'s it going',1498755994,'',1,1,1498751040,1498751040,0),
+	(2,'8cac03d1-f10f-43b0-bf99-b3d221783161','00581ea9-3547-4c81-930c-a3ed042e4b21','','','',X'7B7D','',1,'When do we start design and who will do it?',1498756985,'',1,1,1498752806,1498752806,0),
+	(3,'947d12f8-21fe-4108-8b73-a1153a781549','00581ea9-3547-4c81-930c-a3ed042e4b21','','','',X'7B7D','',1,'I\'m heading home now.',1498822191,'',1,1,1498756093,1498756093,0),
+	(4,'82d9c13c-4b4b-478b-b7f8-7473709f4a81','00581ea9-3547-4c81-930c-a3ed042e4b21','','','',X'7B7D','',1,'Hey, I have a day off tomorrow.',1498822237,'',1,1,1498756184,1498756184,0),
+	(5,'b14a1276-46c5-4fc5-8b18-fce1d4b6733a','00581ea9-3547-4c81-930c-a3ed042e4b21','','','',X'7B7D','',1,'Go for it!',1498822274,'',1,1,1498756259,1498756259,0),
+	(6,'09172b11-44e1-455c-81fb-4b2cffa28492','00581ea9-3547-4c81-930c-a3ed042e4b21','','','',X'7B7D','',1,'I got a bonus at work today!',1498822401,'',1,1,1498756318,1498756318,0),
+	(7,'a5fc268d-01e4-4c63-9b88-7db2c40cf6ad','00581ea9-3547-4c81-930c-a3ed042e4b21','','','',X'7B7D','',1,'Come on, it\'s all in your head. It\'s perfectly fine.',1498822573,'',1,1,1498756390,1498756390,0),
+	(8,'821d92d7-4a68-452a-b660-51379544cec4','00581ea9-3547-4c81-930c-a3ed042e4b21','','','',X'7B7D','',1,'That\'s nice.',1502785166,'',1,1,1498756496,1498756496,0),
+	(9,'9272f25b-cfa0-455f-8846-2fd70df7f127','00581ea9-3547-4c81-930c-a3ed042e4b21','','','',X'7B7D','',1,'',0,'',1,1,1498756556,1498756556,0),
+	(10,'c7b8bd3e-8915-494e-88f5-2106b03ef672','00581ea9-3547-4c81-930c-a3ed042e4b21','','','',X'7B7D','',1,'',0,'',1,1,1498756624,1498756624,0),
+	(11,'ef878f79-bab6-4d1b-8ee0-1b6ff69d68ee','00581ea9-3547-4c81-930c-a3ed042e4b21','','','',X'7B7D','',1,'',0,'',1,1,1498756736,1498756736,0);
+
+/*!40000 ALTER TABLE `sc_room` ENABLE KEYS */;
+UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `sc_room_user`;
+
+CREATE TABLE `sc_room_user` (
+  `room_id` varchar(255) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `unread_count` bigint(20) DEFAULT NULL,
+  `meta_data` mediumblob,
+  `created` bigint(20) NOT NULL,
+  `modified` bigint(20) NOT NULL,
+  UNIQUE KEY `room_id` (`room_id`,`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `sc_room_user` WRITE;
+/*!40000 ALTER TABLE `sc_room_user` DISABLE KEYS */;
+
+INSERT INTO `sc_room_user` (`room_id`, `user_id`, `unread_count`, `meta_data`, `created`, `modified`)
+VALUES
+	('09172b11-44e1-455c-81fb-4b2cffa28492','00581ea9-3547-4c81-930c-a3ed042e4b21',0,X'7B7D',1498756318,1498756318),
+	('09172b11-44e1-455c-81fb-4b2cffa28492','be23e324-153b-4f10-a048-89c45b248d0a',1,X'7B7D',1498756339,1498756339),
+	('821d92d7-4a68-452a-b660-51379544cec4','00581ea9-3547-4c81-930c-a3ed042e4b21',0,X'7B7D',1498756496,1498756496),
+	('821d92d7-4a68-452a-b660-51379544cec4','7da9e9c6-d174-4ab5-86f8-99e727c710ff',1,X'7B7D',1498756509,1498756509),
+	('82d9c13c-4b4b-478b-b7f8-7473709f4a81','00581ea9-3547-4c81-930c-a3ed042e4b21',0,X'7B7D',1498756184,1498756184),
+	('82d9c13c-4b4b-478b-b7f8-7473709f4a81','500efdd3-2898-493e-bc14-d34750cc19d5',1,X'7B7D',1498756204,1498756204),
+	('8cac03d1-f10f-43b0-bf99-b3d221783161','00581ea9-3547-4c81-930c-a3ed042e4b21',0,X'7B7D',1498752806,1498752806),
+	('8cac03d1-f10f-43b0-bf99-b3d221783161','158347bb-e8cf-43d6-999a-c8d98e93adca',0,X'7B7D',1498752858,1498752858),
+	('9272f25b-cfa0-455f-8846-2fd70df7f127','00581ea9-3547-4c81-930c-a3ed042e4b21',0,X'7B7D',1498756556,1498756556),
+	('9272f25b-cfa0-455f-8846-2fd70df7f127','3f339c23-faf0-4ebb-b08f-7ef1ecf529be',0,X'7B7D',1498756564,1498756564),
+	('947d12f8-21fe-4108-8b73-a1153a781549','00581ea9-3547-4c81-930c-a3ed042e4b21',0,X'7B7D',1498756093,1498756093),
+	('947d12f8-21fe-4108-8b73-a1153a781549','ea7c2e24-4f5c-4ffb-97dd-ef648b6d46d3',1,X'7B7D',1498756109,1498756109),
+	('9d60544c-4409-4269-83c7-28144cac30c6','00581ea9-3547-4c81-930c-a3ed042e4b21',0,X'7B7D',1498751040,1498751040),
+	('9d60544c-4409-4269-83c7-28144cac30c6','d18b8a24-7bd5-4580-b54c-26a60d0e097e',0,X'7B7D',1498751087,1498751087),
+	('a5fc268d-01e4-4c63-9b88-7db2c40cf6ad','00581ea9-3547-4c81-930c-a3ed042e4b21',4,X'7B7D',1498756390,1498756390),
+	('a5fc268d-01e4-4c63-9b88-7db2c40cf6ad','a4bbfd16-aed6-485c-8497-6203bac70d99',1,X'7B7D',1498756443,1498756443),
+	('b14a1276-46c5-4fc5-8b18-fce1d4b6733a','00581ea9-3547-4c81-930c-a3ed042e4b21',0,X'7B7D',1498756259,1498756259),
+	('b14a1276-46c5-4fc5-8b18-fce1d4b6733a','2cccca24-9ac0-4302-99e4-b2ab0e123d04',1,X'7B7D',1498756279,1498756279),
+	('c7b8bd3e-8915-494e-88f5-2106b03ef672','00581ea9-3547-4c81-930c-a3ed042e4b21',0,X'7B7D',1498756624,1498756624),
+	('c7b8bd3e-8915-494e-88f5-2106b03ef672','1e53e44f-4dd3-4da6-a236-aac43dbafb83',0,X'7B7D',1498756640,1498756640),
+	('ef878f79-bab6-4d1b-8ee0-1b6ff69d68ee','00581ea9-3547-4c81-930c-a3ed042e4b21',0,X'7B7D',1498756736,1498756736),
+	('ef878f79-bab6-4d1b-8ee0-1b6ff69d68ee','f7463789-a127-430b-9cbb-4f1f45c073cc',0,X'7B7D',1498756748,1498756748);
+
+/*!40000 ALTER TABLE `sc_room_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `sc_subscription`;
+
+CREATE TABLE `sc_subscription` (
+  `room_id` varchar(255) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `platform` int(11) NOT NULL,
+  `notification_subscription_id` varchar(255) DEFAULT NULL,
+  `deleted` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sc_user`;
+
+CREATE TABLE `sc_user` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `picture_url` varchar(255) DEFAULT NULL,
+  `information_url` varchar(255) DEFAULT NULL,
+  `unread_count` bigint(20) unsigned NOT NULL,
+  `meta_data` mediumblob,
+  `is_public` tinyint(1) NOT NULL,
+  `is_can_block` tinyint(1) NOT NULL,
+  `is_show_users` tinyint(1) NOT NULL,
+  `access_token` varchar(255) DEFAULT NULL,
+  `created` bigint(20) NOT NULL,
+  `modified` bigint(20) NOT NULL,
+  `deleted` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `sc_user` WRITE;
+/*!40000 ALTER TABLE `sc_user` DISABLE KEYS */;
+
+INSERT INTO `sc_user` (`id`, `user_id`, `name`, `picture_url`, `information_url`, `unread_count`, `meta_data`, `is_public`, `is_can_block`, `is_show_users`, `access_token`, `created`, `modified`, `deleted`)
+VALUES
+	(1,'00581ea9-3547-4c81-930c-a3ed042e4b21','Williams','http://www.material-ui.com/images/ok-128.jpg','',4,X'7B7D',0,1,1,'rHoUY.7iRU~-yUJtrbaRkRQom0hq1Nse',1498749777,1498749777,0),
+	(2,'d18b8a24-7bd5-4580-b54c-26a60d0e097e','Jones','http://www.material-ui.com/images/raquelromanp-128.jpg','',0,X'7B7D',0,1,1,'hL~LZ0Zd+UpYLe-D5S7u_A3Egk1xQFMx',1498750938,1498750938,0),
+	(3,'158347bb-e8cf-43d6-999a-c8d98e93adca','Taylor','http://www.material-ui.com/images/uxceo-128.jpg','',0,X'7B7D',0,1,1,'Ed~z-N_NFjYU/Otfx0iMdHzwL94xumOP',1498752754,1498752754,0),
+	(4,'ea7c2e24-4f5c-4ffb-97dd-ef648b6d46d3','Thomas','http://www.material-ui.com/images/kolage-128.jpg','',1,X'7B7D',0,1,1,'wGBgO9TL9.s1VC_n3-45OEk7WPmvj_wW',1498756043,1498756043,0),
+	(5,'500efdd3-2898-493e-bc14-d34750cc19d5','Martin','http://www.material-ui.com/images/kerem-128.jpg','',1,X'7B7D',0,1,1,'O4stuoYYrOFzPx4NAO7F0Fj0emd-XWqM',1498756171,1498756171,0),
+	(6,'2cccca24-9ac0-4302-99e4-b2ab0e123d04','Jackson','http://www.material-ui.com/images/jsa-128.jpg','',1,X'7B7D',0,1,1,'vt~9g5tSgEqNwM/keFeg8d73lTw0m.o_',1498756251,1498756251,0),
+	(7,'be23e324-153b-4f10-a048-89c45b248d0a','Lopez','http://www.material-ui.com/images/chexee-128.jpg','',1,X'7B7D',0,1,1,'144BojZe6HBWqHS7i0ij-IFJG/8w/asr',1498756312,1498756312,0),
+	(8,'a4bbfd16-aed6-485c-8497-6203bac70d99','Gonzalez','http://www.material-ui.com/images/angelceballos-128.jpg','',1,X'7B7D',0,1,1,'k-YS28bj4hKpzzF4F0mVS5DhT5~31hK5',1498756382,1498756382,0),
+	(9,'7da9e9c6-d174-4ab5-86f8-99e727c710ff','Lee','http://www.material-ui.com/images/ok-128.jpg','',1,X'7B7D',0,1,1,'FhFwc7JVYcHTPkgAHdVdKIulA~0ngt-X',1498756483,1498756483,0),
+	(10,'3f339c23-faf0-4ebb-b08f-7ef1ecf529be','Harris','http://www.material-ui.com/images/allisongrayce-128.jpg','',0,X'7B7D',0,1,1,'XeQcnP+B7ZGn-73SNuIX~V_JXguKOdTC',1498756542,1498756542,0),
+	(11,'1e53e44f-4dd3-4da6-a236-aac43dbafb83','Lewis','http://www.material-ui.com/images/adhamdannaway-128.jpg','',0,X'7B7D',0,1,1,'YORL8YF20Y4tzMh2WM/sItx_XJ1Up~lR',1498756604,1498756604,0),
+	(12,'f7463789-a127-430b-9cbb-4f1f45c073cc','Perez','http://www.material-ui.com/images/adellecharles-128.jpg','',0,X'7B7D',0,1,1,'7b7~LSH/hP5U5Ln5/uOZN~hipm7//yol',1498756715,1498756715,0);
+
+/*!40000 ALTER TABLE `sc_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

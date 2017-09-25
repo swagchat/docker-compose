@@ -1,0 +1,88 @@
+version: '3'
+
+services:
+  swagchat-chat-api:
+    image: swagchat/chat-api
+    links:
+      - mysql-master
+      - mysql-slave
+      - swagchat-rtm-api
+    restart: always
+    ports:
+      - "9000:9000"
+    networks:
+      - swagchat
+    volumes:
+      - ./storage:/tmp/storage
+    environment:
+      SC_DEMO_PAGE: "true"
+      SC_DATASTORE_PROVIDER: mysql
+      SC_DATASTORE_TABLE_NAME_PREFIX: sc_
+      SC_DATASTORE_USER: swagchat
+      SC_DATASTORE_PASSWORD: password
+      SC_DATASTORE_DATABASE: swagchat
+      SC_DATASTORE_MASTER_HOST: mysql-master
+      SC_DATASTORE_MASTER_PORT: 3306
+      SC_DATASTORE_SLAVE_HOST: mysql-slave
+      SC_DATASTORE_SLAVE_PORT: 3307
+      SC_STORAGE_PROVIDER: local
+      SC_STORAGE_BASE_URL: http://localhost:9000/v0/assets
+      SC_STORAGE_LOCAL_PATH: /tmp/storage/
+      SC_RTM_PROVIDER: direct
+      SC_RTM_DIRECT_ENDPOINT: http://swagchat-rtm-api:9100/v0
+      SC_REACT_CHAT_ENDPOINT: /v0
+      SC_REACT_RTM_PROTOCOL: ws
+      SC_REACT_RTM_HOST: 127.0.0.1:9100
+      SC_REACT_RTM_PATH: /v0
+  swagchat-rtm-api:
+    image: swagchat/rtm-api
+    restart: always
+    ports:
+      - "9100:9100"
+    networks:
+      - swagchat
+  mysql-master:
+    image: mysql:5.7.17
+    restart: always
+    ports:
+      - 3306:3306
+    networks:
+      - swagchat
+    volumes:
+      - ./datastore/mysql-master/var/lib/mysql:/var/lib/mysql
+      - ./datastore/mysql-master/var/log:/var/log
+      - ./datastore/mysql-master/init:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: master_password
+      MYSQL_DATABASE: swagchat
+      MYSQL_USER: swagchat
+      MYSQL_PASSWORD: password
+      MYSQL_REPLICA_USER: replica
+      MYSQL_REPLICA_PASS: replica_password
+    command: ["mysqld", "--log-bin=mysql-bin", "--server-id=1"]
+  mysql-slave:
+    image: mysql:5.7.17
+    links:
+      - mysql-master
+    restart: always
+    ports:
+      - 3307:3306
+    networks:
+      - swagchat
+    volumes:
+      - ./datastore/mysql-slave/var/lib/mysql:/var/lib/mysql
+      - ./datastore/mysql-slave/var/log:/var/log
+      - ./datastore/mysql-master/init:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: slave_password
+      MYSQL_DATABASE: swagchat
+      MYSQL_USER: swagchat
+      MYSQL_PASSWORD: password
+      MYSQL_REPLICA_USER: replica
+      MYSQL_REPLICA_PASS: replica_password
+      MYSQL_MASTER_SERVER: mysql-master
+      MYSQL_MASTER_WAIT_TIME: 10
+    command: ["mysqld", "--log-bin=mysql-bin", "--server-id=2"]
+networks:
+  swagchat:
+    driver: bridge

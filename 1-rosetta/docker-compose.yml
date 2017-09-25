@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  swagchat-chat-api:
+    image: swagchat/chat-api
+    links:
+      - swagchat-rtm-api
+    restart: always
+    ports:
+      - "9000:9000"
+    networks:
+      - rosetta
+    volumes:
+      - ./datastore/swagchat:/tmp/datastore
+      - ./storage/swagchat:/tmp/storage
+    environment:
+      SC_DEMO_PAGE: "true"
+      SC_DATASTORE_PROVIDER: sqlite
+      SC_DATASTORE_TABLE_NAME_PREFIX: sc_
+      SC_DATASTORE_SQLITE_PATH: /tmp/datastore/swagchat.db
+      SC_STORAGE_PROVIDER: local
+      SC_STORAGE_BASE_URL: http://localhost:9000/v0/assets
+      SC_STORAGE_LOCAL_PATH: /tmp/storage/
+      SC_RTM_PROVIDER: direct
+      SC_RTM_DIRECT_ENDPOINT: http://swagchat-rtm-api:9100/v0
+      SC_REACT_CHAT_ENDPOINT: /v0
+      SC_REACT_RTM_PROTOCOL: ws
+      SC_REACT_RTM_HOST: 127.0.0.1:9100
+      SC_REACT_RTM_PATH: /v0
+  swagchat-rtm-api:
+    image: swagchat/rtm-api
+    restart: always
+    ports:
+      - "9100:9100"
+    networks:
+      - rosetta
+networks:
+  rosetta:
+    driver: bridge
